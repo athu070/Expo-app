@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../src/context/AuthContext';
 
 export default function LoginScreen() {
-  const { login, isLoading } = useAuth();
+  const { login, isLoggedIn } = useAuth();
   const router = useRouter();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -34,19 +34,21 @@ export default function LoginScreen() {
   };
 
   const handleLogin = async () => {
+    console.log("-----")
     validateEmail(email);
     validatePassword(password);
-
     if (!emailError && !passwordError) {
+      setIsLoading(true);
       try {
         await login(email, password);
-        router.replace('/');
       } catch (error) {
         if (error instanceof Error) {
           Alert.alert('Login Failed', error.message || 'An error occurred. Please try again.');
         } else {
           Alert.alert('Login Failed', 'An unexpected error occurred. Please try again.');
         }
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -77,7 +79,17 @@ export default function LoginScreen() {
         secureTextEntry
       />
       {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
-      <Button title={isLoading ? "Logging in..." : "Login"} onPress={handleLogin} disabled={isLoading} />
+      <TouchableOpacity 
+        style={[styles.button, isLoading && styles.disabledButton]} 
+        onPress={handleLogin} 
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <ActivityIndicator color="#ffffff" />
+        ) : (
+          <Text style={styles.buttonText}>Login</Text>
+        )}
+      </TouchableOpacity>
     </View>
   );
 }
@@ -88,24 +100,42 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 24,
+    fontWeight: 'bold',
     marginBottom: 20,
+    color: '#333',
   },
   input: {
     width: '100%',
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    borderColor: '#ddd',
     borderWidth: 1,
     borderRadius: 5,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+    backgroundColor: '#fff',
   },
   errorText: {
     color: 'red',
     marginBottom: 10,
+    alignSelf: 'flex-start',
   },
- });
- 
- 
+  button: {
+    backgroundColor: '#007AFF',
+    padding: 15,
+    borderRadius: 5,
+    width: '100%',
+    alignItems: 'center',
+  },
+  disabledButton: {
+    backgroundColor: '#9AC1F0',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});

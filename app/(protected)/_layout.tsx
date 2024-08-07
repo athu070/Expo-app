@@ -1,12 +1,12 @@
 import React from 'react';
 import { Redirect, Tabs } from "expo-router";
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../src/context/AuthContext';
 
 export default function ProtectedLayout() {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn || !user) {
     return <Redirect href="/login" />;
   }
 
