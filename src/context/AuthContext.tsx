@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post('https://apiqa2.uniqueschoolapp.ie/v5/api/login?api_version=5&school_id=2&app_version=1.0.3&email=ayushtester%40yopmail.com&password=12345678', {
+      const response = await axios.post('https://apiqa2.uniqueschoolapp.ie/v5/api/login?api_version=5&school_id=2&app_version=1.0.3&device_manufacturer=OnePlus&device_model=HD1901&device_os_name=android&device_os_version=12&device_os_type=64bit&device_type=PHONE&email=ayushtester%40yopmail.com&password=12345678', {
         api_version: '5',
         school_id: '2',
         app_version: '1.0.3',

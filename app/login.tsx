@@ -34,7 +34,6 @@ export default function LoginScreen() {
   };
 
   const handleLogin = async () => {
-    console.log("-----")
     validateEmail(email);
     validatePassword(password);
     if (!emailError && !passwordError) {
@@ -114,7 +113,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderWidth: 1,
     borderRadius: 5,
-    marginBottom: 15,
+    marginBottom: 10,
     paddingHorizontal: 15,
     backgroundColor: '#fff',
   },
