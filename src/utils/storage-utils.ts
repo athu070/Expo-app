@@ -1,4 +1,3 @@
-
 import * as SecureStore from 'expo-secure-store';
 
 export const getValueFromStorage = async (key: string): Promise<string | null> => {

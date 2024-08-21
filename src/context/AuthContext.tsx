@@ -30,6 +30,7 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -80,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await setValueInStorage('userData', JSON.stringify(response.data.data.user));
         setIsLoggedIn(true);
         setUser(response.data.data.user); 
-        router.replace('/');
+        router.replace('/(protected)/notification');
       } else {
         throw new Error(response.data.message || 'Login failed');
       }
@@ -96,6 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await removeValuefromStorage('userData');
       setIsLoggedIn(false);
       setUser(null);
+      router.replace('/login');
     } catch (error) {
       console.error('Error during logout:', error);
     }
@@ -106,7 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
